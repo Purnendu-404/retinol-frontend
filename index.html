@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#faf9f7">
+    <title>Retinol — Diabetic Retinopathy Screening</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=IBM+Plex+Mono:wght@500;600&family=Inter:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="./style.css">
+    <script>
+        (function () {
+            var stored = localStorage.getItem("retinol-theme");
+            var theme = stored === "light" || stored === "dark"
+                ? stored
+                : (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+            document.documentElement.setAttribute("data-theme", theme);
+        })();
+    </script>
+    <link rel="icon"
+        href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23A6540F'/%3E%3Cpath d='M10 32c8-12 15-17 22-17s14 5 22 17c-8 12-15 17-22 17S18 44 10 32Z' fill='none' stroke='white' stroke-width='4'/%3E%3Ccircle cx='32' cy='32' r='7' fill='white'/%3E%3C/svg%3E">
+</head>
+
+<body>
+    <div class="app-shell">
+
+        <header class="topbar">
+            <div class="topbar-inner">
+                <a class="brand" href="#" aria-label="Retinol home">
+                    <span class="brand-mark" aria-hidden="true">
+                        <svg viewBox="0 0 48 48">
+                            <path d="M5 24c8-12 15-17 19-17s11 5 19 17c-8 12-15 17-19 17S13 36 5 24Z"></path>
+                            <circle cx="24" cy="24" r="7"></circle>
+                        </svg>
+                    </span>
+                    <span class="brand-copy">
+                        <strong>Retinol</strong>
+                        <small>Diabetic retinopathy screening</small>
+                    </span>
+                </a>
+
+                <div class="topbar-right">
+                    <div class="system-state" id="systemState">
+                        <span class="state-dot"></span>
+                        <span>Model online</span>
+                    </div>
+
+                    <button type="button" class="theme-toggle" id="themeToggle" aria-label="Switch to dark mode"
+                        aria-pressed="false">
+                        <svg class="icon-moon" viewBox="0 0 24 24">
+                            <path d="M20 14.5A8.5 8.5 0 0 1 9.5 4 8.5 8.5 0 1 0 20 14.5Z"></path>
+                        </svg>
+                        <svg class="icon-sun" viewBox="0 0 24 24">
+                            <circle cx="12" cy="12" r="4.2"></circle>
+                            <path
+                                d="M12 3v2.2M12 18.8V21M21 12h-2.2M5.2 12H3M18.36 5.64l-1.56 1.56M7.2 16.8l-1.56 1.56M18.36 18.36l-1.56-1.56M7.2 7.2 5.64 5.64">
+                            </path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <main class="workspace">
+
+            <section class="intro">
+                <h1>Screen a fundus photograph<br>for diabetic retinopathy.</h1>
+                <p>
+                    Enter the patient's details, upload a retinal fundus image, and Retinol
+                    returns a graded severity assessment with the underlying image analysis
+                    in under a minute.
+                </p>
+            </section>
+
+            <ol class="stepper" aria-label="Screening workflow">
+                <li class="stepper-item is-active" data-step="patient">
+                    <span class="stepper-index">1</span>
+                    <span class="stepper-label">Patient</span>
+                </li>
+                <li class="stepper-item is-active" data-step="image">
+                    <span class="stepper-index">2</span>
+                    <span class="stepper-label">Fundus image</span>
+                </li>
+                <li class="stepper-item" data-step="result">
+                    <span class="stepper-index">3</span>
+                    <span class="stepper-label">Result</span>
+                </li>
+            </ol>
+
+            <section class="panel" aria-labelledby="patient-heading">
+                <div class="panel-head">
+                    <h2 id="patient-heading">Patient record</h2>
+                    <p>Details are stored against this screening for the clinical record.</p>
+                </div>
+
+                <div class="card">
+                    <div class="form-grid">
+                        <div class="field">
+                            <label for="patientId">Patient ID <em>required</em></label>
+                            <input type="text" id="patientId" placeholder="e.g. P-0142" autocomplete="off">
+                        </div>
+
+                        <div class="field">
+                            <label for="patientName">Full name <em>required</em></label>
+                            <input type="text" id="patientName" placeholder="Patient name" autocomplete="off">
+                        </div>
+
+                        <div class="field">
+                            <label for="patientAge">Age <em>required</em></label>
+                            <input type="number" id="patientAge" placeholder="Years" min="1" max="120">
+                        </div>
+
+                        <div class="field">
+                            <label for="patientGender">Gender <em>required</em></label>
+                            <select id="patientGender">
+                                <option value="">Select</option>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+
+                        <div class="field">
+                            <label for="patientContact">Contact number <em>required</em></label>
+                            <input type="tel" id="patientContact" placeholder="Phone number" autocomplete="off">
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="panel" aria-labelledby="image-heading">
+                <div class="panel-head">
+                    <h2 id="image-heading">Fundus image</h2>
+                    <p>A clear, centred fundus photograph gives the most reliable reading.</p>
+                </div>
+
+                <div class="split">
+
+                    <div class="card upload-card">
+                        <div class="drop-zone" id="dropZone" tabindex="0" role="button"
+                            aria-label="Upload a fundus image">
+                            <input type="file" id="imageInput" accept=".jpg,.jpeg,.png,.bmp,.tif,.tiff,image/*"
+                                hidden>
+
+                            <div class="upload-placeholder" id="uploadPlaceholder">
+                                <span class="upload-icon" aria-hidden="true">
+                                    <svg viewBox="0 0 32 32">
+                                        <path
+                                            d="M16 22V6m0 0-6 6m6-6 6 6M7 20v4a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-4">
+                                        </path>
+                                    </svg>
+                                </span>
+                                <p class="upload-title">Drop a fundus image here, or
+                                    <button type="button" class="link-button" id="browseButton">browse
+                                        files</button>
+                                </p>
+                                <small>JPG, PNG, BMP or TIFF</small>
+                            </div>
+
+                            <div class="preview hidden" id="previewContainer">
+                                <img id="imagePreview" alt="Uploaded retinal fundus image">
+                                <div class="preview-bar">
+                                    <span>Ready for analysis</span>
+                                    <button type="button" class="text-button" id="removeImage">Remove</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <aside class="card pipeline-card">
+                        <h3>What Retinol does</h3>
+                        <ol class="pipeline-list">
+                            <li><strong>ROI extraction</strong><span>Isolates the retinal field from the source
+                                    photograph.</span></li>
+                            <li><strong>CLAHE normalization</strong><span>Balances contrast and illumination across
+                                    the fundus.</span></li>
+                            <li><strong>Vessel &amp; edge mapping</strong><span>Extracts structural and microvascular
+                                    detail.</span></li>
+                            <li><strong>Grade classification</strong><span>Scores the image against Grade 0–4
+                                    severity.</span></li>
+                        </ol>
+                    </aside>
+                </div>
+
+                <div class="action-row">
+                    <p class="action-note">Double-check the patient details and image before running the analysis.</p>
+                    <button type="button" class="primary-button" id="analyzeButton">
+                        <span class="button-label">Run analysis</span>
+                        <span class="spinner" aria-hidden="true"></span>
+                    </button>
+                </div>
+
+                <p class="status-message hidden" id="statusMessage" role="status"></p>
+            </section>
+
+            <section class="panel hidden" id="resultSection" aria-labelledby="result-heading">
+                <div class="panel-head">
+                    <h2 id="result-heading">Screening result</h2>
+                    <p>Model output and the intermediate image-processing stages for this screening.</p>
+                </div>
+
+                <div class="verdict-card">
+                    <div class="verdict-primary">
+                        <span class="verdict-label">Identified stage</span>
+                        <div class="verdict-grade" id="prediction">—</div>
+                        <span class="verdict-severity" id="severityLabel">—</span>
+                    </div>
+
+                    <div class="verdict-metrics">
+                        <div class="metric">
+                            <span class="metric-label">Confidence</span>
+                            <span class="metric-value" id="confidence">—</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-label">Triage status</span>
+                            <span class="metric-pill" id="triageStatus">—</span>
+                        </div>
+                    </div>
+
+                    <div class="advisory">
+                        <span class="advisory-label">Advisory</span>
+                        <p id="advisoryText">—</p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>Image analysis</h3>
+                    <div class="image-grid">
+                        <figure class="image-tile">
+                            <div class="image-frame"><img id="resultOriginalImage" alt="Original fundus photograph">
+                            </div>
+                            <figcaption><strong>Original</strong><span>Uploaded fundus photograph</span></figcaption>
+                        </figure>
+
+                        <figure class="image-tile">
+                            <div class="image-frame"><img id="processedImage"
+                                    alt="CLAHE and ROI normalized fundus image"></div>
+                            <figcaption><strong>CLAHE + ROI normalized</strong><span>Contrast-enhanced retinal
+                                    field</span></figcaption>
+                        </figure>
+
+                        <figure class="image-tile">
+                            <div class="image-frame image-frame-dark"><img id="edgeImage"
+                                    alt="Structural edge and microvascular map"></div>
+                            <figcaption><strong>Structural edge map</strong><span>Vessel &amp; microvascular
+                                    extraction</span></figcaption>
+                        </figure>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>Severity probability</h3>
+                    <table class="probability-table">
+                        <thead>
+                            <tr>
+                                <th scope="col">Grade</th>
+                                <th scope="col">Severity</th>
+                                <th scope="col">Probability</th>
+                            </tr>
+                        </thead>
+                        <tbody id="probabilityBody"></tbody>
+                    </table>
+                </div>
+
+                <div class="disclaimer">
+                    <strong>Decision-support prototype.</strong>
+                    <p>This output is not a medical diagnosis. Findings should be confirmed by a qualified
+                        ophthalmologist before any clinical decision is made.</p>
+                </div>
+            </section>
+
+        </main>
+
+        <footer class="footer">
+            <span>Retinol</span>
+            <span>AI-assisted retinal screening</span>
+        </footer>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+
+</html>
