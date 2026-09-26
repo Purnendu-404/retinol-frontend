@@ -310,6 +310,18 @@ async function fetchJSON(url, options = {}) {
     return data;
 }
 
+async function wakeBackend() {
+    try {
+        console.log("Waking backend...");
+
+        await fetchJSON(`${BACKEND_URL}/health`);
+
+        console.log("Backend is awake.");
+    } catch (error) {
+        console.warn("Backend wake-up failed:", error.message);
+    }
+}
+
 
 // --------------------------------------------------
 // CLOUDINARY
@@ -626,3 +638,6 @@ async function analyzeImage() {
 }
 
 analyzeButton.addEventListener("click", analyzeImage);
+
+// Wake Render backend when the frontend loads.
+wakeBackend();
