@@ -314,7 +314,11 @@ async function wakeBackend() {
     try {
         console.log("Waking backend...");
 
-        await fetchJSON(`${BACKEND_URL}/health`);
+        const response = await fetch(`${BACKEND_URL}/health`);
+
+        if (!response.ok) {
+            throw new Error(`Backend returned ${response.status}`);
+        }
 
         console.log("Backend is awake.");
     } catch (error) {
