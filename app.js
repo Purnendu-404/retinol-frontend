@@ -1,4 +1,5 @@
 const BACKEND_URL = "https://retinol-backend.onrender.com";
+const ML_URL = "https://retinol-ml.onrender.com";
 
 // --------------------------------------------------
 // THEME
@@ -310,19 +311,59 @@ async function fetchJSON(url, options = {}) {
     return data;
 }
 
+let backendReady = false;
+let mlReady = false;
+
 async function wakeBackend() {
-    try {
-        console.log("Waking backend...");
+    while (!backendReady) {
+        try {
+            console.log("Waking backend...");
 
-        const response = await fetch(`${BACKEND_URL}/health`);
+            const response = await fetch(`${BACKEND_URL}/health`);
 
-        if (!response.ok) {
-            throw new Error(`Backend returned ${response.status}`);
+            if (response.ok) {
+                backendReady = true;
+                console.log("Backend is ready.");
+                return;
+            }
+
+            console.log(`Backend returned ${response.status}`);
+        } catch (error) {
+            console.log("Backend is still waking...");
         }
 
-        console.log("Backend is awake.");
-    } catch (error) {
-        console.warn("Backend wake-up failed:", error.message);
+        await new Promise(resolve => setTimeout(resolve, 5000));
+    }
+}
+
+
+async function wakeML() {
+    while (!mlReady) {
+        try {
+            console.log("Waking ML service...");
+
+            const response = await fetch(`${ML_URL}/health`);
+
+            let data = null;
+
+            try {
+                data = await response.json();
+            } catch (error) {
+                // Ignore non-JSON response.
+            }
+
+            if (response.ok && data?.status === "ready") {
+                mlReady = true;
+                console.log("ML service is ready.");
+                return;
+            }
+
+            console.log("ML service/model is still loading...");
+        } catch (error) {
+            console.log("ML service is still waking...");
+        }
+
+        await new Promise(resolve => setTimeout(resolve, 5000));
     }
 }
 
@@ -643,5 +684,10 @@ async function analyzeImage() {
 
 analyzeButton.addEventListener("click", analyzeImage);
 
-// Wake Render backend when the frontend loads.
-wakeBackend();
+// Wake backend and ML service in parallel.
+Promise.all([
+    wakeBackend(),
+    wakeML()
+]).catch(error => {
+    console.error("Service wake-up error:", error);
+});
